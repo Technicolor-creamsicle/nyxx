@@ -11,11 +11,11 @@ environment:
 
 dependencies:
   logging: "^1.0.1"
-  nyxx: "2.0.0-rc.5"
+  nyxx:
+    git:
+      url: https://github.com/Technicolor-creamsicle/nyxx/
+      path: nyxx/
 
 dev_dependencies:
   test: "^1.16.8"
 
-dependency_overrides:
-  nyxx:
-    path: "../nyxx"
