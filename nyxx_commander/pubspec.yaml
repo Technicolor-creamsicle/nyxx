@@ -14,5 +14,5 @@ dependencies:
   logging: "^1.0.1"
   nyxx:
      git:
-        url: https://github.com/l7ssha/nyxx
+        url: https://github.com/Technicolor-creamsicle/nyxx
         path: nyxx/
