@@ -29,7 +29,7 @@ class ThreadBuilder extends Builder {
   void setPublic() => this.private = false;
 
   @override
-  Map<String, dynamic> build() => <String, dynamic>{
+  RawApiMap build() => <String, dynamic>{
     "auto_archive_duration": this.archiveAfter.value,
     "name": name,
     "type": private ? 12 : 11
@@ -45,6 +45,9 @@ class ThreadArchiveTime extends IEnum<int> {
 
   /// Archive after an day
   static const ThreadArchiveTime day = ThreadArchiveTime._new(1440);
+
+  /// Archive after 3 days
+  static const ThreadArchiveTime threeDays = ThreadArchiveTime._new(4320);
 
   /// Archive after an week
   static const ThreadArchiveTime week = ThreadArchiveTime._new(10080);

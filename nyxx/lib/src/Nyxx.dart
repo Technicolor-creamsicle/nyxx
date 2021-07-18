@@ -1,5 +1,7 @@
 part of nyxx;
 
+typedef RawApiMap = Map<String, dynamic>;
+
 /// Generic interface for Nyxx. Represents basic functionality of Nyxx that are always available.
 abstract class INyxx implements Disposable {
   _HttpHandler get _http;
@@ -108,12 +110,14 @@ class NyxxRest extends INyxx {
         bool ignoreExceptions = true,
         bool useDefaultLogger = true,
         Level? defaultLoggerLogLevel}) {
+    this._logger.fine("Staring Nyxx: intents: [$intents]; ignoreExceptions: [$ignoreExceptions]; useDefaultLogger: [$useDefaultLogger]; defaultLoggerLogLevel: $defaultLoggerLogLevel");
+
     if (_token.isEmpty) {
       throw MissingTokenError();
     }
 
     if (useDefaultLogger) {
-      Logger.root.level = defaultLoggerLogLevel ?? Level.ALL;
+      Logger.root.level = defaultLoggerLogLevel ?? Level.INFO;
 
       Logger.root.onRecord.listen((LogRecord rec) {
         print(
@@ -138,7 +142,11 @@ class NyxxRest extends INyxx {
 
       final errorsPort = ReceivePort();
       errorsPort.listen((err) {
-        _logger.severe("ERROR: ${err[0]}");
+        final stackTrace = err[1] != null
+          ? ". Stacktrace: \n${err[1]}"
+          : "";
+
+        _logger.shout("Got Error: Message: [${err[0]}]$stackTrace");
       });
       Isolate.current.addErrorListener(errorsPort.sendPort);
     }
@@ -310,13 +318,16 @@ class Nyxx extends NyxxRest {
   /// Fired when a thread gets deleted
   late Stream<ThreadDeletedEvent> onThreadDelete;
   /// Emitted when stage channel instance is created
-  late Stream<StageInstanceEvent>  onStageInstanceCreate;
+  late Stream<StageInstanceEvent> onStageInstanceCreate;
 
   /// Emitted when stage channel instance is updated
-  late Stream<StageInstanceEvent>  onStageInstanceUpdate;
+  late Stream<StageInstanceEvent> onStageInstanceUpdate;
 
   /// Emitted when stage channel instance is deleted
-  late Stream<StageInstanceEvent>  onStageInstanceDelete;
+  late Stream<StageInstanceEvent> onStageInstanceDelete;
+
+  /// Emitted when stage channel instance is deleted
+  late Stream<GuildStickerUpdate> onGuildStickersUpdate;
 
   /// Creates and logs in a new client. If [ignoreExceptions] is true (by default is)
   /// isolate will ignore all exceptions and continue to work.
@@ -406,6 +417,14 @@ class Nyxx extends NyxxRest {
   /// Join [ThreadChannel] with given [channelId]
   Future<void> joinThread(Snowflake channelId) =>
       this.httpEndpoints.joinThread(channelId);
+
+  /// Gets standard sticker with given id
+  Future<StandardSticker> getSticker(Snowflake id) =>
+      this.httpEndpoints.getSticker(id);
+
+  /// List all nitro stickers packs
+  Stream<StickerPack> listNitroStickerPacks() =>
+      this.httpEndpoints.listNitroStickerPacks();
 
   @override
   Future<void> dispose() async {
