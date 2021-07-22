@@ -13,6 +13,7 @@ dependencies:
   http: "^0.13.3"
   logging: "^1.0.1"
 
+
   nyxx:
      git:
         url: https://github.com/Technicolor-creamsicle/nyxx

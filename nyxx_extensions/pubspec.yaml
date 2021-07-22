@@ -11,10 +11,12 @@ environment:
 
 dependencies:
   http: "^0.13.3"
+
   nyxx:
     git:
       url: https://github.com/Technicolor-creamsicle/nyxx/
       path: nyxx/
  
+
 dev_dependencies:
   test: "^1.17.0"
